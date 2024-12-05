@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - GreenRide</title>
+  <style>
+    /* General Styles */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: "Raleway", sans-serif;
+      height: 100%;
+      background-color: #e0f7e9;
+    }
+
+    /* Header style */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #4CAF50;
+      padding: 15px;
+      color: white;
+      position: relative;
+      z-index: 2;
+    }
+    .header img {
+      height: 40px;
+    }
+    .header .title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .header .menu {
+      display: flex;
+      gap: 15px;
+    }
+    .header .menu a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .header .menu a:hover {
+      background-color: #45a049;
+    }
+
+    /* Settings Container */
+    .settings-container {
+      max-width: 800px;
+      margin: 50px auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .settings-container h2 {
+      font-size: 28px;
+      color: #4CAF50;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin-top: 25px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Settings Options */
+    .setting-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 18px;
+      transition: background-color 0.3s;
+    }
+
+    .setting-option:hover {
+      background-color: #f9f9f9;
+    }
+
+    .setting-option label {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .setting-option input[type="checkbox"],
+    .setting-option select {
+      transform: scale(1.2);
+    }
+
+    /* Descriptions for Settings */
+    .option-description {
+      font-size: 14px;
+      color: #888;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    /* Save Settings Button */
+    .save-button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-top: 30px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .save-button:hover {
+      background-color: #45a049;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .settings-container {
+        margin: 20px;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header with logo and navigation links -->
+<div class="header">
+  <img src="imgs/greenride_logo.png" alt="GreenRide Logo">
+  <div class="title">GreenRide</div>
+  <div class="menu">
+    <a href="home.html">Home</a>
+    <a href="your_rides.html">Your Rides</a>
+    <a href="settings.html">Settings</a>
+    <a href="profile.html">Profile</a>
+  </div>
+</div>
+
+<!-- Settings Content -->
+<div class="settings-container">
+  <h2>Settings</h2>
+
+  <!-- General Section -->
+  <div class="section-title">General</div>
+
+  <!-- Notification Settings -->
+  <div class="setting-option">
+    <label for="notification">Push Notifications:</label>
+    <input type="checkbox" id="notification" checked>
+  </div>
+
+  <div class="setting-option">
+    <label for="sms">SMS Notifications:</label>
+    <input type="checkbox" id="sms">
+  </div>
+
+  <!-- Ride Preferences -->
+  <div class="setting-option">
+    <label for="ride-type">Default Ride Type:</label>
+    <select id="ride-type">
+      <option value="carpool">Carpool</option>
+      <option value="eco">Eco</option>
+      <option value="premium">Premium</option>
+    </select>
+  </div>
+
+  <!-- Privacy Section -->
+  <div class="setting-option">
+    <label for="privacy">Privacy</label>
+  </div>
+  <p class="option-description">Manage the data you share with us</p>
+
+  <!-- Home Address Section -->
+  <div class="setting-option">
+    <label for="home">Home</label>
+  </div>
+  <p class="option-description">666 Commonwealth Ave</p>
+
+  <!-- Safety Section Title -->
+  <div class="section-title">Safety</div>
+
+  <!-- Safety Settings -->
+  <div class="setting-option">
+    <label for="trusted-contacts">Manage Trusted Contacts</label>
+  </div>
+  <p class="option-description">Share your trip status with family and friends</p>
+
+  <!-- Save Settings Button -->
+  <button class="save-button" onclick="saveSettings()">Save Settings</button>
+</div>
+
+<script>
+  function saveSettings() {
+    alert("Settings have been saved successfully!");
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GreenRide Login</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: "Raleway", sans-serif;
+      background: url('imgs/loading_page.gif') no-repeat center center fixed; 
+      background-size: cover;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .login-box {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+
+    .login-box img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    a {
+      display: block;
+      margin-top: 15px;
+      color: #388e3c;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="login-box">
+    <!-- GreenRide Logo -->
+    <img src="imgs/greenride_logo.png" alt="GreenRide Logo">
+    
+    <h2>GreenRide Login</h2>
+    <form onsubmit="redirectToHome(event)">
+      <input type="text" id="emailPhone" placeholder="Email or Phone Number" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Continue</button>
+      <a href="#">Forgot your password?</a>
+      <a href="#">New user? Sign up here</a>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Function to redirect to the home page on form submission
+  function redirectToHome(event) {
+    event.preventDefault(); // Prevent the form from submitting in the traditional way
+    window.location.href = 'home.html'; // Redirect to the home page
+  }
+</script>
+
+</body>
+</html>

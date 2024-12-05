@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Rides - GreenRide</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: "Raleway", sans-serif;
+      height: 100%;
+      background-color: #e0f7e9;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #4CAF50;
+      padding: 15px;
+      color: white;
+      position: relative;
+      z-index: 2;
+    }
+    .header img {
+      height: 40px;
+    }
+    .header .title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .header .menu {
+      display: flex;
+      gap: 15px;
+    }
+    .header .menu a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .header .menu a:hover {
+      background-color: #45a049;
+    }
+
+    #map {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    #driver-info {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 95%;
+      max-width: 600px;
+      background-color: rgba(76, 175, 80, 0.95);
+      color: white;
+      padding: 25px;
+      box-shadow: 0px -4px 15px rgba(0, 0, 0, 0.3);
+      font-size: 20px;
+      text-align: center;
+      border-radius: 20px 20px 0 0;
+      transition: transform 0.3s ease;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #driver-info.hidden {
+      transform: translateX(-50%) translateY(100%);
+    }
+
+    #toggle-button {
+      position: fixed;
+      bottom: 70px;
+      left: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    #toggle-button:hover {
+      background-color: #45a049;
+    }
+
+    #center-location-button {
+      position: fixed;
+      bottom: 140px;
+      left: 20px;
+      background-color: #fff;
+      border: 2px solid #4CAF50;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      font-size: 24px;
+      font-weight: bold;
+      color: #4CAF50;
+      z-index: 3;
+    }
+
+    .driver-picture img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+
+    .driver-details p {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <img src="imgs/greenride_logo.png" alt="GreenRide Logo">
+  <div class="title">GreenRide</div>
+  <div class="menu">
+    <a href="home.html">Home</a>
+    <a href="your_rides.html">Your Rides</a>
+    <a href="settings.html">Settings</a>
+    <a href="profile.html">Profile</a>
+  </div>
+</div>
+
+<!-- Google Maps Section -->
+<div id="map"></div>
+
+<!-- Driver Info Floating Window -->
+<div id="driver-info">
+  <div class="driver-picture">
+    <img src="imgs/snoopdogg.jpg" alt="Driver Picture">
+  </div>
+  <div class="driver-details">
+    <p>Driver: Snoop Dogg</p>
+    <p>Car: Maybach Green (GreenRide-Eco)</p>
+    <p>Rating: ⭐⭐⭐⭐</p>
+    <p id="eta">ETA: Calculating...</p>
+  </div>
+</div>
+
+<!-- Toggle Button -->
+<button id="toggle-button" onclick="toggleDriverInfo()">▼</button>
+
+<!-- Center Location Button -->
+<div id="center-location-button" onclick="centerUserLocation()">👤</div>
+
+<script>
+  let map, userMarker, driverMarker, directionsService, routePolyline, currentPathIndex = 0, pathCoordinates, userLocation;
+
+  // Toggle Driver Info Display
+  function toggleDriverInfo() {
+    const driverInfo = document.getElementById("driver-info");
+    const toggleButton = document.getElementById("toggle-button");
+
+    driverInfo.classList.toggle("hidden");
+    toggleButton.textContent = driverInfo.classList.contains("hidden") ? "▲" : "▼";
+  }
+
+  function initMap() {
+    const boston = { lat: 42.3601, lng: -71.0589 };
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 14,
+      center: boston,
+    });
+
+    directionsService = new google.maps.DirectionsService();
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        userMarker = new google.maps.Marker({
+          position: userLocation,
+          map: map,
+          title: "Your Location",
+          icon: {
+            url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+          },
+        });
+
+        map.setCenter(userLocation);
+
+        simulateDriverMovement(userLocation);
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+
+  function simulateDriverMovement(userLocation) {
+    const driverStart = { lat: userLocation.lat + 0.01, lng: userLocation.lng + 0.01 };
+
+    driverMarker = new google.maps.Marker({
+      position: driverStart,
+      map: map,
+      title: "Driver Location",
+      icon: {
+        url: "https://maps.google.com/mapfiles/kml/shapes/cabs.png", // Car icon
+        scaledSize: new google.maps.Size(50, 50),
+      },
+    });
+
+    const request = {
+      origin: driverStart,
+      destination: userLocation,
+      travelMode: "DRIVING",
+    };
+
+    directionsService.route(request, (result, status) => {
+      if (status === "OK") {
+        pathCoordinates = result.routes[0].overview_path;
+
+        routePolyline = new google.maps.Polyline({
+          path: pathCoordinates,
+          geodesic: true,
+          strokeColor: "rgba(0, 191, 255, 0.6)", // Light blue transparent line
+          strokeOpacity: 0.6,
+          strokeWeight: 6,
+          map: map,
+        });
+
+        moveDriverAlongPath();
+      }
+    });
+  }
+
+  function moveDriverAlongPath() {
+    if (currentPathIndex < pathCoordinates.length) {
+      const nextPoint = pathCoordinates[currentPathIndex];
+      driverMarker.setPosition(nextPoint);
+
+      // Remove the part of the path that has already been traversed
+      routePolyline.setPath(pathCoordinates.slice(currentPathIndex));
+
+      currentPathIndex++;
+      setTimeout(moveDriverAlongPath, 500); // Slower, smoother movement
+    } else {
+      document.getElementById("eta").textContent = "ETA: Arrived!";
+      routePolyline.setMap(null); // Remove the line when the driver reaches the destination
+    }
+  }
+
+  function centerUserLocation() {
+    if (userLocation) {
+      map.setCenter(userLocation);
+      map.setZoom(16); // Zoom closer to the user's location
+    }
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDKTAexUFBmIvSZBugHZPjiqgGVq-qsXM&libraries=geometry&callback=initMap" async defer></script>
+
+</body>
+</html>

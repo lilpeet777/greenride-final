@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GreenRide - Home</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+    /* General styles */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: "Raleway", sans-serif;
+      height: 100%;
+      background-color: #e0f7e9;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #4CAF50;
+      padding: 15px;
+      color: white;
+    }
+
+    .header img {
+      height: 40px;
+    }
+
+    .header .title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .header .menu {
+      display: flex;
+      gap: 15px;
+    }
+
+    .header .menu a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .header .menu a:hover {
+      background-color: #45a049;
+    }
+
+    /* Main content */
+    .main-content {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .main-content h1 {
+      color: #4CAF50;
+      font-size: 36px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80%;
+      max-width: 600px;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .location-input {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+
+    .ride-options {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .ride-option {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 10px;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .ride-option img {
+      width: 100px;
+      margin-bottom: 15px;
+    }
+
+    .ride-option button {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .ride-option button:hover {
+      background-color: #45a049;
+    }
+
+    .ride-option p {
+      margin: 10px 0;
+    }
+
+    .ride-option .co2-emission {
+      font-weight: bold;
+      color: #388e3c;
+    }
+
+    /* Schedule section */
+    .schedule-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .schedule-section h2 {
+      color: #4CAF50;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .schedule-button {
+      padding: 12px 20px;
+      font-size: 18px;
+      color: white;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s;
+      margin-top: 20px;
+    }
+
+    .schedule-button:hover {
+      transform: scale(1.05);
+      background-color: #45a049;
+    }
+
+    /* Footer styles */
+    .footer {
+      background-color: #2f5f39;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    .footer a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* jQuery UI Datepicker hover customization */
+    .ui-datepicker-calendar tbody td:hover a {
+      background-color: white !important;
+      color: black !important;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      text-align: center;
+      border-radius: 8px;
+    }
+
+    .modal-content button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background-color: #45a049;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+</head>
+<body>
+
+<!-- Header with logo and navigation links -->
+<div class="header">
+  <img src="imgs/greenride_logo.png" alt="GreenRide Logo">
+  <div class="title">GreenRide</div>
+  <div class="menu">
+    <a href="home.html">Home</a>
+    <a href="your_rides.html">Your Rides</a>
+    <a href="settings.html">Settings</a>
+    <a href="profile.html">Profile</a>
+  </div>
+</div>
+
+<!-- Modal Popup for Terms Agreement -->
+<div id="termsModal" class="modal">
+  <div class="modal-content">
+    <h2>Location Access Agreement</h2>
+    <p>To enhance your experience, GreenRide requests access to your location data. This will allow us to suggest location matches as you type. Do you agree to share your location?</p>
+    <button id="agreeButton">I Agree</button>
+    <button id="disagreeButton">No, Thanks</button>
+  </div>
+</div>
+
+<!-- Main content for location input and ride options -->
+<div class="container">
+  <div class="main-content">
+    <h1>Where would you like to go?</h1>
+    <div class="input-group">
+      <input type="text" class="location-input" id="location" placeholder="Your Location">
+      <div id="location-suggestions" class="autocomplete-items"></div>
+    </div>
+    <div class="input-group">
+      <input type="text" class="location-input" id="destination" placeholder="Your Destination">
+      <div id="destination-suggestions" class="autocomplete-items"></div>
+    </div>
+    <div class="ride-options">
+      <div class="ride-option">
+        <img src="imgs/greenride_carpool.png" alt="Carpool Ride">
+        <h3>Carpool</h3>
+        <p>Enjoy a shared ride with other passengers using our advanced route-matching algorithm.</p>
+        <p class="co2-emission">Average reduced CO₂: 50%</p>
+        <button>Select</button>
+      </div>
+      <div class="ride-option">
+        <img src="imgs/greenride_eco.png" alt="Eco Ride">
+        <h3>GreenRide Eco</h3>
+        <p>Ride with contract drivers in standard electric vehicles for a greener journey.</p>
+        <p class="co2-emission">Average reduced CO₂: 100%</p>
+        <button>Select</button>
+      </div>
+      <div class="ride-option">
+        <img src="imgs/greenride_premium.png" alt="Premium Ride">
+        <h3>GreenRide Premium</h3>
+        <p>Experience luxury and comfort with contract drivers in high-end electric vehicles.</p>
+        <p class="co2-emission">Average reduced CO₂: 100%</p>
+        <button>Select</button>
+      </div>
+    </div>
+
+    <div class="schedule-section">
+      <h2>Schedule a Carpool</h2>
+      <div class="input-group">
+        <input type="text" id="date" placeholder="Select Date and Time" class="location-input">
+      </div>
+      <button class="schedule-button">Schedule Carpool</button>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div>
+    <span>&#10071;</span> Emergency Contact: ###-###-####
+  </div>
+  <div>
+    <span>&#9742;</span> Customer Service: xxx-xxx-xxxx
+  </div>
+  <div>
+    <span>&#x1F47D;</span> <a href="https://instagram.com/peterrrguo" target="_blank">Our Instagram: peterrrguo</a>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    $("#date").datepicker({
+      dateFormat: "mm/dd/yy",
+      showAnim: "slideDown"
+    });
+  });
+
+  window.onload = function() {
+    const modal = document.getElementById("termsModal");
+    const agreeButton = document.getElementById("agreeButton");
+    const disagreeButton = document.getElementById("disagreeButton");
+
+    modal.style.display = "block";
+
+    agreeButton.onclick = function() {
+      modal.style.display = "none";
+      initializeAutocomplete();
+    };
+
+    disagreeButton.onclick = function() {
+      modal.style.display = "none";
+      alert("Location autocomplete will not be available without permission.");
+    };
+  };
+
+  function initializeAutocomplete() {
+    const locationInput = document.getElementById('location');
+    const destinationInput = document.getElementById('destination');
+    
+    const locationAutocomplete = new google.maps.places.Autocomplete(locationInput);
+    const destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput);
+
+    locationAutocomplete.setFields(['address_component', 'geometry']);
+    destinationAutocomplete.setFields(['address_component', 'geometry']);
+  }
+
+  google.maps.event.addDomListener(window, 'load', initializeAutocomplete);
+</script>
+
+</body>
+</html>
